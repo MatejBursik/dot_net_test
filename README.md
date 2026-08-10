@@ -24,7 +24,7 @@ Poznámka pre hodnotenie:
 - Hodnotiť sa bude nielen funkčnosť a správne fungovanie API endpointov, ale aj kvalita kódu, dodržiavanie najlepších praktík, štruktúra projektu a schopnosť vysvetliť a obhájiť rozhodnutia pri dizajne a implementácii riešenia.
 
 ## How to run
-*note: you need Docker installed*
+*note: you need Docker and DotNet installed*
 
 ### Run database setup
 Start the MySQL container:

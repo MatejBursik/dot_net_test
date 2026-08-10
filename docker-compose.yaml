@@ -1,0 +1,50 @@
+services:
+    db:
+        image: mysql:latest
+        ports:
+        - '3306:3306'
+        environment:
+        - MYSQL_ROOT_PASSWORD=abc123
+        - MYSQL_DATABASE=library_db
+        volumes:
+        - db:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pabc123"]
+            interval: 15s
+            timeout: 5s
+            retries: 10
+            start_period: 15s
+    
+    api:
+        build:
+            context: ./library_api
+            dockerfile: Dockerfile
+        ports:
+        - "5001:5001"
+        depends_on:
+            db:
+                condition: service_healthy
+        environment:
+        - MYSQL_DB_HOST=db
+        - MYSQL_DB_USER=root
+        - MYSQL_DB_PASS=abc123
+        - ASPNETCORE_ENVIRONMENT=Development # Default is Production
+        restart: always
+
+    db-viewer:
+        build:
+            context: ./db_viewer
+            dockerfile: Dockerfile
+        ports:
+        - "8501:8501"
+        depends_on:
+            db:
+                condition: service_healthy
+        environment:
+        - MYSQL_DB_HOST=db
+        - MYSQL_DB_USER=root
+        - MYSQL_DB_PASS=abc123
+        - MYSQL_DB_NAME=library_db
+        
+volumes:
+    db:
